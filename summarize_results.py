@@ -2,9 +2,10 @@ _EPSILON = 1e-08
 
 import numpy as np
 import pandas as pd
-import tensorflow as tf
 import random
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+import tensorflow as tf
 # import sys
 
 from termcolor import colored
@@ -49,8 +50,8 @@ def load_logging(filename):
 ##### MAIN SETTING
 OUT_ITERATION               = 5
 
-data_mode                   = 'SYNTHETIC' #METABRIC, SYNTHETIC
-seed                        = 1234
+data_mode                   = 'METABRIC' #METABRIC, SYNTHETIC
+seed                        =  1234
 
 EVAL_TIMES                  = [12, 24, 36] # evalution times (for C-index and Brier-Score)
 
@@ -140,16 +141,16 @@ for out_itr in range(OUT_ITERATION):
     # for out_itr in range(OUT_ITERATION):
     print ('ITR: ' + str(out_itr+1) + ' DATA MODE: ' + data_mode + ' (a:' + str(alpha) + ' b:' + str(beta) + ' c:' + str(gamma) + ')' )
     ##### CREATE DEEPFHT NETWORK
-    tf.reset_default_graph()
+    tf.compat.v1.reset_default_graph()
 
-    config = tf.ConfigProto()
+    config = tf.compat.v1.ConfigProto()
     config.gpu_options.allow_growth = True
-    sess = tf.Session(config=config)
+    sess =  tf.compat.v1.Session(config=config)
 
     model = Model_DeepHit(sess, "DeepHit", input_dims, network_settings)
-    saver = tf.train.Saver()
+    saver = tf.compat.v1.train.Saver()
 
-    sess.run(tf.global_variables_initializer())
+    sess.run(tf.compat.v1.global_variables_initializer())
 
     ### TRAINING-TESTING SPLIT
     (tr_data,te_data, tr_time,te_time, tr_label,te_label, 

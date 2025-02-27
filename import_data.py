@@ -10,7 +10,10 @@ Once must construct a function similar to "import_dataset_SYNTHETIC":
 '''
 import numpy as np
 import pandas as pd
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import random
+
 
 
 ##### DEFINE USER-FUNCTIONS #####

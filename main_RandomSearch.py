@@ -16,6 +16,8 @@ OUTPUTS:
 import time, datetime, os
 import get_main
 import numpy as np
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 import import_data as impt
 
@@ -100,7 +102,6 @@ RS_ITERATION                = 50
 data_mode                   = 'METABRIC'
 seed                        = 1234
 
-
 ##### IMPORT DATASET
 '''
     num_Category            = typically, max event/censoring time * 1.2 (to make enough time horizon)
@@ -118,7 +119,7 @@ if data_mode == 'SYNTHETIC':
     EVAL_TIMES = [12, 24, 36]
 elif data_mode == 'METABRIC':
     (x_dim), (data, time, label), (mask1, mask2) = impt.import_dataset_METABRIC(norm_mode = 'standard')
-	EVAL_TIMES = [144, 288, 432] 
+    EVAL_TIMES = [144, 288, 432] 
 else:
     print('ERROR:  DATA_MODE NOT FOUND !!!')
 
@@ -129,7 +130,6 @@ MASK = (mask1, mask2) #masks are required to calculate loss functions without fo
 out_path      = data_mode + '/results/'
 
 for itr in range(OUT_ITERATION):
-    
     if not os.path.exists(out_path + '/itr_' + str(itr) + '/'):
         os.makedirs(out_path + '/itr_' + str(itr) + '/')
 
@@ -143,7 +143,7 @@ for itr in range(OUT_ITERATION):
         print(new_parser)
 
         # get validation performance given the hyperparameters
-        tmp_max = get_main.get_valid_performance(DATA, MASK, new_parser, itr, EVAL_TIMES, MAX_VALUE=max_valid)
+        tmp_max = get_main.get_valid_performance(DATA, MASK, new_parser, itr, EVAL_TIMES, MAX_VALUE=max_valid, r_itr=r_itr)
 
         if tmp_max > max_valid:
             max_valid = tmp_max
