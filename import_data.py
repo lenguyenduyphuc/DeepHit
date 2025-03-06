@@ -135,21 +135,35 @@ def import_dataset_SEER(norm_mode="standard"):
     in_filename = './sample data/SEER/encoded_SEER_data.csv'
     df = pd.read_csv(in_filename, sep=',')
     
-    label           = np.asarray(df[['label']])
-    time            = np.asarray(df[['time']])
-    data            = np.asarray(df.iloc[:,4:])
-    data            = f_get_Normalization(data, norm_mode)
+    # Convert time and label to numeric
+    time = np.asarray(df[['time']]).astype(float)
+    label = np.asarray(df[['label']]).astype(int)
+    
+    # Make sure all feature columns are numeric
+    # Convert all data columns to float
+    feature_df = df.iloc[:,2:]
+    for col in feature_df.columns:
+        feature_df[col] = pd.to_numeric(feature_df[col], errors='coerce')
+    
+    # Replace any NaN values from the conversion
+    feature_df = feature_df.fillna(0)
+    
+    # Convert to numpy array
+    data = np.asarray(feature_df).astype(float)
+    
+    # Now normalize
+    data = f_get_Normalization(data, norm_mode)
 
-    num_Category    = int(np.max(time) * 1.2)  #to have enough time-horizon
-    num_Event       = int(len(np.unique(label)) - 1) #only count the number of events (do not count censoring as an event)
+    num_Category = int(np.max(time) * 1.2)  # to have enough time-horizon
+    num_Event = int(len(np.unique(label)) - 1)  # only count events (not censoring)
 
-    x_dim           = np.shape(data)[1]
+    x_dim = np.shape(data)[1]
 
-    mask1           = f_get_fc_mask2(time, label, num_Event, num_Category)
-    mask2           = f_get_fc_mask3(time, -1, num_Category)
+    mask1 = f_get_fc_mask2(time, label, num_Event, num_Category)
+    mask2 = f_get_fc_mask3(time, -1, num_Category)
 
-    DIM             = (x_dim)
-    DATA            = (data, time, label)
-    MASK            = (mask1, mask2)
+    DIM = (x_dim)
+    DATA = (data, time, label)
+    MASK = (mask1, mask2)
 
     return DIM, DATA, MASK
