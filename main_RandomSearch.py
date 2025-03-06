@@ -99,7 +99,7 @@ def get_random_hyperparameters(out_path):
 OUT_ITERATION               = 5
 RS_ITERATION                = 50
 
-data_mode                   = 'METABRIC'
+data_mode                   = 'SYNTHETIC'
 seed                        = 1234
 
 ##### IMPORT DATASET
@@ -116,10 +116,16 @@ seed                        = 1234
 '''
 if data_mode == 'SYNTHETIC':
     (x_dim), (data, time, label), (mask1, mask2) = impt.import_dataset_SYNTHETIC(norm_mode = 'standard')
-    EVAL_TIMES = [12, 24, 36]
+    percentiles = np.linspace(2, 100, 20)  # Adjust as needed
+    EVAL_TIMES = np.percentile(time.flatten(),percentiles)
 elif data_mode == 'METABRIC':
     (x_dim), (data, time, label), (mask1, mask2) = impt.import_dataset_METABRIC(norm_mode = 'standard')
-    EVAL_TIMES = [144, 288, 432] 
+    percentiles = np.linspace(2, 100, 20)  # Adjust as needed
+    EVAL_TIMES = np.percentile(time.flatten(),percentiles)
+elif data_mode == 'SEER':
+    (x_dim), (data, time, label), (mask1, mask2) = impt.import_dataset_SEER(norm_mode = 'standard')
+    percentiles = np.linspace(2, 100, 20)  # Adjust as needed
+    EVAL_TIMES = np.percentile(time.flatten(),percentiles)
 else:
     print('ERROR:  DATA_MODE NOT FOUND !!!')
 

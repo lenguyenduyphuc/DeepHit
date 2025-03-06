@@ -57,7 +57,7 @@ def f_get_minibatch(mb_size, x, label, time, mask1, mask2):
 
 
 def get_valid_performance(DATA, MASK, in_parser, out_itr, eval_time=None, MAX_VALUE = -99, OUT_ITERATION=5, r_itr=None):
-    seed                 = 1234 + out_itr + 10*r_itr
+    seed                 = 1234
     ##### DATA & MASK
     (data, time, label)  = DATA
     (mask1, mask2)       = MASK
