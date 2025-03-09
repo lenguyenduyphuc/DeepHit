@@ -99,7 +99,7 @@ def get_random_hyperparameters(out_path):
 OUT_ITERATION               = 5
 RS_ITERATION                = 50
 
-data_mode                   = 'SEER'
+data_mode                   = 'SYNTHETIC'
 seed                        = 1234
 
 ##### IMPORT DATASET
