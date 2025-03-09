@@ -40,7 +40,6 @@ def log(x):
 def div(x, y):
     return tf.div(x, (y + _EPSILON))
 
-
 class Model_DeepHit:
     def __init__(self, sess, name, input_dims, network_settings):
         self.sess               = sess
@@ -113,7 +112,7 @@ class Model_DeepHit:
             self.solver = tf.compat.v1.train.AdamOptimizer(learning_rate=self.lr_rate).minimize(self.LOSS_TOTAL)
 
 
-    ### LOSS-FUNCTION 1 -- Log-likelihood loss
+    ## LOSS-FUNCTION 1 -- Log-likelihood loss
     def loss_Log_Likelihood(self):
         I_1 = tf.sign(self.k)
         tmp1 = tf.reduce_sum(tf.reduce_sum(self.fc_mask1 * self.out, reduction_indices=2), reduction_indices=1, keep_dims=True)
@@ -123,7 +122,6 @@ class Model_DeepHit:
         tmp2 = tf.reduce_sum(tf.reduce_sum(self.fc_mask1 * self.out, reduction_indices=2), reduction_indices=1, keep_dims=True) # this equal to tmp1 before I_1
         tmp2 = (1. - I_1) * log(tmp2)
         self.LOSS_1 = - tf.reduce_mean(tmp1 + 1.0*tmp2) # = I_1 * log(tmp1) + (1. - I_1) * log(tmp1)
-
 
     ### LOSS-FUNCTION 2 -- Ranking loss
     def loss_Ranking(self):
