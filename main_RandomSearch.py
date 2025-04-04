@@ -105,12 +105,12 @@ seed                        = 1234
 ##### IMPORT DATASET
 '''
     num_Category            = typically, max event/censoring time * 1.2 (to make enough time horizon)
-    num_Event               = number of evetns i.e. len(np.unique(label))-1
+    num_Event               = number of events i.e. len(np.unique(label))-1
     max_length              = maximum number of measurements
     x_dim                   = data dimension including delta (num_features)
     mask1, mask2            = used for cause-specific network (FCNet structure)
 
-    EVAL_TIMES              = set specific evaluation time horizons at which the validatoin performance is maximized. 
+    EVAL_TIMES              = set specific evaluation time horizons at which the validation performance is maximized. 
     						  (This must be selected based on the dataset)
 
 '''
@@ -124,6 +124,10 @@ elif data_mode == 'METABRIC':
     EVAL_TIMES = np.percentile(time.flatten(),percentiles)
 elif data_mode == 'SEER':
     (x_dim), (data, time, label), (mask1, mask2) = impt.import_dataset_SEER(norm_mode = 'standard')
+    percentiles = np.linspace(2, 100, 20)  # Adjust as needed
+    EVAL_TIMES = np.percentile(time.flatten(),percentiles)
+elif data_mode == 'GPU':
+    (x_dim), (data, time, label), (mask1, mask2) = impt.import_dataset_GPU(norm_mode = 'standard')
     percentiles = np.linspace(2, 100, 20)  # Adjust as needed
     EVAL_TIMES = np.percentile(time.flatten(),percentiles)
 else:
