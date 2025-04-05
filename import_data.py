@@ -97,7 +97,7 @@ def import_dataset_SYNTHETIC(norm_mode='standard'):
     DATA            = (data, time, label)
     MASK            = (mask1, mask2)
 
-    return DIM, DATA, MASK, num_Category, num_Event
+    return DIM, DATA, MASK
 
 
 def import_dataset_GPU(norm_mode='standard'):
@@ -125,7 +125,7 @@ def import_dataset_GPU(norm_mode='standard'):
     DATA            = (data, time, label)
     MASK            = (mask1, mask2)
 
-    return DIM, DATA, MASK, num_Category, num_Event
+    return DIM, DATA, MASK
 
 
 def import_dataset_METABRIC(norm_mode='standard'):
@@ -155,7 +155,7 @@ def import_dataset_METABRIC(norm_mode='standard'):
     DATA            = (data, time, label)
     MASK            = (mask1, mask2)
 
-    return DIM, DATA, MASK, num_Category, num_Event
+    return DIM, DATA, MASK
 
 def import_dataset_SEER(norm_mode="standard"):
     in_filename = './sample data/SEER/encoded_SEER_data.csv'
@@ -192,4 +192,4 @@ def import_dataset_SEER(norm_mode="standard"):
     DATA = (data, time, label)
     MASK = (mask1, mask2)
 
-    return DIM, DATA, MASK, num_Category, num_Event
+    return DIM, DATA, MASK
