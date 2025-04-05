@@ -50,7 +50,7 @@ def load_logging(filename):
 ##### MAIN SETTING
 OUT_ITERATION               = 5
 
-data_mode                   = 'SEER' #METABRIC, SYNTHETIC
+data_mode                   = 'GPU' #METABRIC, SYNTHETIC
 seed                        =  1234
 
 EVAL_TIMES                  = [12, 24, 36] # evalution times (for C-index and Brier-Score)
@@ -74,6 +74,10 @@ elif data_mode == 'METABRIC':
     EVAL_TIMES = np.percentile(time.flatten(),percentiles)
 elif data_mode == 'SEER':
     (x_dim), (data, time, label), (mask1, mask2) = impt.import_dataset_SEER(norm_mode = 'standard')
+    percentiles = np.linspace(2, 100, 20)  # Adjust as needed
+    EVAL_TIMES = np.percentile(time.flatten(),percentiles)
+elif data_mode == 'GPU':
+    (x_dim), (data, time, label), (mask1, mask2) = impt.import_dataset_GPU(norm_mode = "standard")
     percentiles = np.linspace(2, 100, 20)  # Adjust as needed
     EVAL_TIMES = np.percentile(time.flatten(),percentiles)
 else:
@@ -147,16 +151,16 @@ for out_itr in range(OUT_ITERATION):
     # for out_itr in range(OUT_ITERATION):
     print ('ITR: ' + str(out_itr+1) + ' DATA MODE: ' + data_mode + ' (a:' + str(alpha) + ' b:' + str(beta) + ' c:' + str(gamma) + ')' )
     ##### CREATE DEEPFHT NETWORK
-    tf.compat.v1.reset_default_graph()
+    tf.reset_default_graph()
 
-    config = tf.compat.v1.ConfigProto()
+    config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
-    sess =  tf.compat.v1.Session(config=config)
+    sess = tf.Session(config=config)
 
     model = Model_DeepHit(sess, "DeepHit", input_dims, network_settings)
-    saver = tf.compat.v1.train.Saver()
+    saver = tf.train.Saver()
 
-    sess.run(tf.compat.v1.global_variables_initializer())
+    sess.run(tf.global_variables_initializer())
 
     ### TRAINING-TESTING SPLIT
     (tr_data,te_data, tr_time,te_time, tr_label,te_label, 
@@ -249,3 +253,17 @@ print('--------------------------------------------------------')
 print('- FINAL BRIER-SCORE: ')
 print(df2_mean)
 print('========================================================')
+
+
+import matplotlib.pyplot as plt
+values_to_plot = pred[0, 0, :]  # Extracting the first value along the last axis
+plt.plot(values_to_plot)
+ 
+plt.stem(values_to_plot, linefmt='b-', markerfmt='bo', basefmt=" ")
+plt.show()
+ 
+values_to_plot = pred[0, 1, :]  # Extracting the first value along the last axis
+plt.plot(values_to_plot)
+ 
+plt.stem(values_to_plot, linefmt='b-', markerfmt='bo', basefmt=" ")
+plt.show()

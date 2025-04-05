@@ -166,4 +166,31 @@ def import_dataset_SEER(norm_mode="standard"):
     DATA = (data, time, label)
     MASK = (mask1, mask2)
 
+    return DIM, DATA, 
+    
+def import_dataset_GPU(norm_mode="standard"):
+    in_filename = './sample data/GPU/gpu_data.csv'
+
+    df = pd.read_csv(in_filename, sep=',')
+
+    df['censor'] = (df['censor1'] | df['censor2']).astype(int)
+    label            = np.asarray(df[['censor']])
+
+    # create the a new sensor columns from the censors
+    time            = np.asarray(df[['time']]) * 365
+    data            = np.asarray(df.iloc[:,4:])
+    data            = f_get_Normalization(data, norm_mode)
+
+    num_Category    = int(np.max(time) * 1.2)  # to have enough time-horizon
+    num_Event       = int(len(np.unique(label)) - 1) # only count the number of events (do not count censoring as an event)
+
+    x_dim           = np.shape(data)[1]
+
+    mask1           = f_get_fc_mask2(time, label, num_Event, num_Category)
+    mask2           = f_get_fc_mask3(time, -1, num_Category)
+
+    DIM             = (x_dim)
+    DATA            = (data, time, label)
+    MASK            = (mask1, mask2)
+
     return DIM, DATA, MASK
