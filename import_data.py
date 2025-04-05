@@ -14,8 +14,6 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import random
 
-
-
 ##### DEFINE USER-FUNCTIONS #####
 def f_get_Normalization(X, norm_mode):
     num_Patient, num_Feature = np.shape(X)
@@ -99,7 +97,35 @@ def import_dataset_SYNTHETIC(norm_mode='standard'):
     DATA            = (data, time, label)
     MASK            = (mask1, mask2)
 
-    return DIM, DATA, MASK
+    return DIM, DATA, MASK, num_Category, num_Event
+
+
+def import_dataset_GPU(norm_mode='standard'):
+    in_filename = './sample data/GPU/gpu_data.csv'
+    df = pd.read_csv(in_filename, sep=',')
+    
+    df['censor'] = 0  # Default value (when both are 0)
+    df.loc[df['censor1'] == 1, 'censor'] = 1  # When censor1 is 1
+    df.loc[df['censor2'] == 1, 'censor'] = 2  # When censor2 is 1
+
+    label           = np.asarray(df[['censor']])
+    time            = np.asarray(df[['time']]) * 365
+    data            = np.asarray(df.iloc[:,4:18])
+    data            = f_get_Normalization(data, norm_mode)
+
+    num_Category    = int(np.max(time) * 1.2)  #to have enough time-horizon
+    num_Event       = int(len(np.unique(label)) - 1) #only count the number of events (do not count censoring as an event)
+
+    x_dim           = np.shape(data)[1]
+
+    mask1           = f_get_fc_mask2(time, label, num_Event, num_Category)
+    mask2           = f_get_fc_mask3(time, -1, num_Category)
+
+    DIM             = (x_dim)
+    DATA            = (data, time, label)
+    MASK            = (mask1, mask2)
+
+    return DIM, DATA, MASK, num_Category, num_Event
 
 
 def import_dataset_METABRIC(norm_mode='standard'):
@@ -129,7 +155,7 @@ def import_dataset_METABRIC(norm_mode='standard'):
     DATA            = (data, time, label)
     MASK            = (mask1, mask2)
 
-    return DIM, DATA, MASK
+    return DIM, DATA, MASK, num_Category, num_Event
 
 def import_dataset_SEER(norm_mode="standard"):
     in_filename = './sample data/SEER/encoded_SEER_data.csv'
@@ -166,4 +192,4 @@ def import_dataset_SEER(norm_mode="standard"):
     DATA = (data, time, label)
     MASK = (mask1, mask2)
 
-    return DIM, DATA, MASK
+    return DIM, DATA, MASK, num_Category, num_Event
