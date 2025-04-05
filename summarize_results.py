@@ -50,7 +50,7 @@ def load_logging(filename):
 ##### MAIN SETTING
 OUT_ITERATION               = 5
 
-data_mode                   = 'GPU' #METABRIC, SYNTHETIC
+data_mode                   = 'SYNTHETIC' #METABRIC, SYNTHETIC
 seed                        =  1234
 
 EVAL_TIMES                  = [12, 24, 36] # evalution times (for C-index and Brier-Score)
@@ -66,12 +66,10 @@ EVAL_TIMES                  = [12, 24, 36] # evalution times (for C-index and Br
 '''
 if data_mode == 'SYNTHETIC':
     (x_dim), (data, time, label), (mask1, mask2) = impt.import_dataset_SYNTHETIC(norm_mode = 'standard')
-    percentiles = np.linspace(2, 100, 20)  # Adjust as needed
-    EVAL_TIMES = np.percentile(time.flatten(),percentiles)
+    EVAL_TIMES  = [12, 24, 36]
 elif data_mode == 'METABRIC':
     (x_dim), (data, time, label), (mask1, mask2) = impt.import_dataset_METABRIC(norm_mode = 'standard')
-    percentiles = np.linspace(2, 100, 20)  # Adjust as needed
-    EVAL_TIMES = np.percentile(time.flatten(),percentiles)
+    EVAL_TIMES  = [144, 288, 432]
 elif data_mode == 'SEER':
     (x_dim), (data, time, label), (mask1, mask2) = impt.import_dataset_SEER(norm_mode = 'standard')
     percentiles = np.linspace(2, 100, 20)  # Adjust as needed

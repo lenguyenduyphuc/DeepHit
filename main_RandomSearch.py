@@ -99,7 +99,7 @@ def get_random_hyperparameters(out_path):
 OUT_ITERATION               = 5
 RS_ITERATION                = 50
 
-data_mode                   = 'GPU'
+data_mode                   = 'SYNTHETIC' # 'SYNTHETIC', 'METABRIC', 'SEER', 'GPU'
 seed                        = 1234
 
 ##### IMPORT DATASET
